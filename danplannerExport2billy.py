@@ -251,8 +251,12 @@ def move_file(args, cfg):
     else:
         to_date_str = to_date.strftime("%Y-%m-%d")
     if from_date == to_date:
-        print(f'ERROR when parsing dates the from_date (str: {from_date_str}) and to_date (str: {to_date_str}) '
+        print(f'ERROR when parsing dates: from_date (str: {from_date_str}) and to_date (str: {to_date_str}) '
               f'are the same. This looks like an error.\nExiting!', file=sys.stderr)
+        sys.exit(1)
+    if from_date > to_date:
+        print(f'ERROR when parsing dates: from_date (str: {from_date_str}) is after to_date (str: {to_date_str}) '
+              f'This looks like an error.\nExiting!', file=sys.stderr)
         sys.exit(1)
     dst_filename = "financeexport_%s_-_%s.csv" % (from_date_str, to_date_str)
     dst_full_path = os.path.join(dst_folder, dst_filename)
@@ -359,7 +363,7 @@ def main():
     dp_data = parse_danplanner_file(args, cfg, path=dst_full_path)
     # Play around with Billy
     billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data)
-    print("\nFinished!\n")
+    print("\nSuccessfully uploaded data to Billy!\n")
 
 
 if __name__ == '__main__':

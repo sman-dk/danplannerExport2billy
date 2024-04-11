@@ -5,4 +5,4 @@ This is a "it works for us" piece of software, that is made specifically for int
 
 ## Preconditions
 
-`pip3 install babel`
+`pip3 install babel requests`

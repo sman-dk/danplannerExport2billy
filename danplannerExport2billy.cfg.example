@@ -1,0 +1,11 @@
+[billy]
+apikey=abcdef1234567890
+
+[files]
+# OBS Be aware that the current year is appended to the path. E.g. /2024
+# If the folder is not present, then the script will fail
+dstFolder=~/danplanner_finanseksport
+; Import file max age in seconds before asking for confirmation
+maxFileAge=600
+; Used to determine the locale to apply to the currencies from the exported file from Danplanner
+currencyLocale=da_DK

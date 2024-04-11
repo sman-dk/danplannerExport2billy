@@ -127,7 +127,7 @@ def get_tax_rates(client):
 
 def check_date(string):
     """ Type function for argparse - check if date is parsable"""
-    if string == None:
+    if string is None:
         # to_date is None per default. We are okay with that
         return string
     try:
@@ -149,7 +149,7 @@ def arguments():
     parser.add_argument('-f', '--file', help='input file (Danplanner Export file)',
                         required=True, type=str)
     parser.add_argument('--from-date', help='If the from date can not be determined, then it can be set',
-                        default = None, type = check_date)
+                        default=None, type=check_date)
     parser.add_argument('-t', '--to-date', help='If the to date is not today. A timestamp may be included. '
                                                 'ISO8601 format: E.g. 2024-04-09 or 2024-04-09T14:56:12',
                         default=None, type=check_date)
@@ -346,7 +346,8 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
     if not user_ok == 'y':
         print('*** Data is NOT uploaded to Billy ***')
         return
-    response = post_daybook_transactions(client, daybook_id, entry_date, organization_id, from_date_str, to_date_str, cfg['billy']['prefix'])
+    response = post_daybook_transactions(client, daybook_id, entry_date, organization_id, from_date_str, to_date_str,
+                                         cfg['billy']['prefix'])
     pp.pprint(response)
     daybook_transaction_id = response['daybookTransactions'][0]['id']
     print(f'** post_daybook_transactions daybook_transaction_id: {daybook_transaction_id}')
@@ -360,6 +361,7 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
         pp.pprint(response)
 
     print("\nSuccessfully uploaded data to Billy!\n")
+
 
 def main():
     args = arguments()

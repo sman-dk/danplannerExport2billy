@@ -76,13 +76,13 @@ def get_daybook_transaction_lines(client, daybook_transaction_id):
     return response
 
 
-def post_daybook_transactions(client, daybook_id, entry_date, organization_id, from_date, to_date):
+def post_daybook_transactions(client, daybook_id, entry_date, organization_id, from_date, to_date, desc_prefix):
     body = {'daybookTransaction': {
                                    'entryDate': entry_date,
                                    'organizationId': organization_id,
                                    'state': 'draft',
                                    'daybookId': daybook_id,
-                                   'description': f'Danplanner {from_date} til {to_date}',
+                                   'description': f'{desc_prefix} {from_date} til {to_date}',
                                    'priority': 22
                                    }}
 
@@ -91,7 +91,7 @@ def post_daybook_transactions(client, daybook_id, entry_date, organization_id, f
 
 
 def post_daybook_transaction_lines(client, account_id, amount, daybook_transaction_id, side, taxrate_id,
-                                   from_date_str, to_date_str):
+                                   from_date_str, to_date_str, desc_prefix):
     body_line = {
         'accountId': account_id,
         'amount': amount,
@@ -101,7 +101,7 @@ def post_daybook_transaction_lines(client, account_id, amount, daybook_transacti
         'priority': 1,
         'side': side,
         'taxRateId': taxrate_id,
-        'text': 'Danplanner %s til %s' % (from_date_str, to_date_str)
+        'text': '%s %s til %s' % (desc_prefix, from_date_str, to_date_str)
     }
     body = {'daybookTransactionLine': body_line}
     response = client.request('POST', '/daybookTransactionLines', body, None)
@@ -245,10 +245,15 @@ def move_file(args, cfg):
     # Sanity check of from date
     print(f'Sanity checking from date ({from_date_str})')
     check_date(from_date_str)
+    from_date = datetime.fromisoformat(from_date_str)
     if args.to_date:
         to_date_str = args.to_date
     else:
         to_date_str = to_date.strftime("%Y-%m-%d")
+    if from_date == to_date:
+        print(f'ERROR when parsing dates the from_date (str: {from_date_str}) and to_date (str: {to_date_str}) '
+              f'are the same. This looks like an error.\nExiting!', file=sys.stderr)
+        sys.exit(1)
     dst_filename = "financeexport_%s_-_%s.csv" % (from_date_str, to_date_str)
     dst_full_path = os.path.join(dst_folder, dst_filename)
     print(f'Moving file from {src_full_path} to {dst_full_path}')
@@ -328,7 +333,7 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
     if not user_ok == 'y':
         print('*** Data is NOT uploaded to Billy ***')
         return
-    response = post_daybook_transactions(client, daybook_id, entry_date, organization_id, from_date_str, to_date_str)
+    response = post_daybook_transactions(client, daybook_id, entry_date, organization_id, from_date_str, to_date_str, cfg['billy']['prefix'])
     pp.pprint(response)
     daybook_transaction_id = response['daybookTransactions'][0]['id']
     print(f'** post_daybook_transactions daybook_transaction_id: {daybook_transaction_id}')
@@ -338,7 +343,7 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
         side = t['side']
         taxrate_id = t['taxrate_id']
         response = post_daybook_transaction_lines(client, account_id, amount, daybook_transaction_id, side, taxrate_id,
-                                                  from_date_str, to_date_str)
+                                                  from_date_str, to_date_str, cfg['billy']['prefix'])
         pp.pprint(response)
 
 

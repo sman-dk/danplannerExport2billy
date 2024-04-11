@@ -141,7 +141,7 @@ def arguments():
                                      description='A tool to import daybook lines to Billy based on '
                                                  'Danplanner financial export files')
     parser.add_argument('-c', '--cfg', help='Configuration file',
-                        default='~/Nextcloud/p/vammen/regnskab/danplanner_finanseksport/danplannerExport2billy.cfg',
+                        default='~/github/danplannerExport2billy/danplannerExport2billy.cfg',
                         type=str)
     parser.add_argument('-f', '--file', help='input file (Danplanner Export file)',
                         required=True, type=str)

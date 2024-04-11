@@ -1,6 +1,9 @@
 [billy]
 apikey=abcdef1234567890
 
+; Prefix string to insert into the description in Billy transaction lines
+prefix=dp2billy
+
 [files]
 # OBS Be aware that the current year is appended to the path. E.g. /2024
 # If the folder is not present, then the script will fail

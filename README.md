@@ -1,7 +1,7 @@
 # danplannerExport2billy
 Import financial exports from the danish booking system "Danplanner" into the draft daybook of the danish accounting system "Billy".
 
-This is a "it works for us" piece of software, that is made specifically for integrating the booking system and the accounting system used by us on the danish music and nature campsite [Vammen Camping](https://vammencamping.dk). If you use the same booking system and the same accounting system, then this script should spare you some time.
+This is a "it works for us" piece of software, that is made specifically for integrating the booking system and the accounting system used by us on the danish music and nature campsite [Vammen Camping](https://vammencamping.dk). If you use the same booking system and the same accounting system, then this script could spare you some time.
 
 ## Preconditions
 You need a [Billy](https://billy.dk) account. Under settings create an API key and insert it into the configuration file.

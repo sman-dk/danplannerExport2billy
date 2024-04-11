@@ -127,6 +127,9 @@ def get_tax_rates(client):
 
 def check_date(string):
     """ Type function for argparse - check if date is parsable"""
+    if string == None:
+        # to_date is None per default. We are okay with that
+        return string
     try:
         datetime.fromisoformat(string)
     except ValueError:
@@ -145,6 +148,8 @@ def arguments():
                         type=str)
     parser.add_argument('-f', '--file', help='input file (Danplanner Export file)',
                         required=True, type=str)
+    parser.add_argument('--from-date', help='If the from date can not be determined, then it can be set',
+                        default = None, type = check_date)
     parser.add_argument('-t', '--to-date', help='If the to date is not today. A timestamp may be included. '
                                                 'ISO8601 format: E.g. 2024-04-09 or 2024-04-09T14:56:12',
                         default=None, type=check_date)
@@ -238,7 +243,11 @@ def move_file(args, cfg):
     files.sort()
     if len(files) == 0:
         # If no previous files in folder
-        from_date_str = 'unknown'
+        if args.from_date is None:
+            print('ERROR no previous files found in destination folder on which we can base the from_date.'
+                  '\nPlease use the --from-date argument to set the from_date.\nExiting!', file=sys.stderr)
+            sys.exit(1)
+        from_date_str = args.from_date
     else:
         last_file = files[-1]
         from_date_str = last_file.split('_-_')[-1].split('.csv')[0]
@@ -294,7 +303,7 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
         account_no = d['account_no']
         dp_account_name = d['account_name']
         if account_no not in accounts_dict:
-            print(f'{account_no} not found in Billy.\nExiting!', file=sys.stderr)
+            print(f'ERROR Account number {account_no} was not found in Billy.\nExiting!', file=sys.stderr)
             sys.exit(1)
         else:
             billy_account_name = accounts_dict[account_no]['name']

@@ -5,7 +5,6 @@
 # alias dp2billy="~/github/danplannerExport2billy/dp2billy.sh"
 #
 
-cd ~/github/danplannerExport2billy
-source venv/bin/activate
-python3 danplannerExport2billy.py $@
+source ~/github/danplannerExport2billy/venv/bin/activate
+python3 ~/github/danplannerExport2billy/danplannerExport2billy.py $@
 deactivate

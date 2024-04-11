@@ -359,6 +359,7 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
                                                   from_date_str, to_date_str, cfg['billy']['prefix'])
         pp.pprint(response)
 
+    print("\nSuccessfully uploaded data to Billy!\n")
 
 def main():
     args = arguments()
@@ -372,7 +373,7 @@ def main():
     dp_data = parse_danplanner_file(args, cfg, path=dst_full_path)
     # Play around with Billy
     billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data)
-    print("\nSuccessfully uploaded data to Billy!\n")
+    print("\nFinished!\n")
 
 
 if __name__ == '__main__':

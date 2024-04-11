@@ -340,9 +340,6 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
         response = post_daybook_transaction_lines(client, account_id, amount, daybook_transaction_id, side, taxrate_id,
                                                   from_date_str, to_date_str)
         pp.pprint(response)
-    # FIXME
-    # Perhaps save some output in a log file?
-    # Remember a cfg example file in git
 
 
 def main():
@@ -358,9 +355,6 @@ def main():
     # Play around with Billy
     billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data)
     print("\nFinished!\n")
-    # FIXME
-    # Remember a cfg example file in git
-    # Update README.md
 
 
 if __name__ == '__main__':

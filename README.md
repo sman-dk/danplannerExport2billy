@@ -12,6 +12,8 @@ Preferrably create a virtual environment with python and install the following p
 
 `pip3 install babel requests`
 
+Create a configuration file based on the example file. The default location is ~/github/danplannerExport2billy/danplannerExport2billy.cfg
+
 ## Usage
 ```$ ./danplannerExport2billy.py -h
 usage: danplannerExport2billy.py [-h] [-c CFG] -f FILE [-t TO_DATE]
@@ -22,6 +24,8 @@ options:
   -h, --help            show this help message and exit
   -c CFG, --cfg CFG     Configuration file
   -f FILE, --file FILE  input file (Danplanner Export file)
+  --from-date FROM_DATE
+                        If the from date can not be determined, then it can be set. Same format as for the --to-date argument
   -t TO_DATE, --to-date TO_DATE
                         If the to date is not today. A timestamp may be included. ISO8601 format: E.g. 2024-04-09 or 2024-04-09T14:56:12
 ```

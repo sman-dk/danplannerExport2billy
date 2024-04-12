@@ -148,7 +148,8 @@ def arguments():
                         type=str)
     parser.add_argument('-f', '--file', help='input file (Danplanner Export file)',
                         required=True, type=str)
-    parser.add_argument('--from-date', help='If the from date can not be determined, then it can be set',
+    parser.add_argument('--from-date', help='If the from date can not be determined, then it can be set.'
+                                            ' Same format as for the --to-date argument',
                         default=None, type=check_date)
     parser.add_argument('-t', '--to-date', help='If the to date is not today. A timestamp may be included. '
                                                 'ISO8601 format: E.g. 2024-04-09 or 2024-04-09T14:56:12',

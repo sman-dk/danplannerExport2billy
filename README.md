@@ -33,6 +33,12 @@ options:
 In Danplanner go to Finans -> Eksternt finanssystem. Then create an export and click the rightmost icon for exporting. You will then get a file called e.g.:
 FinanceExport_4_11_2024.csv
 
-The date in the filename is the current date, not the end date selected in Danplanner (maybe that will change in the future). That is why you can set the "to date" with the script, in order to deviate from today.
+The date in the filename is the current date, not the end date selected in Danplanner (maybe that will change in the future). That is why you can set the "to date" with the script, in order to deviate from today. The previous date is based on the last file in the destination folder. If no previous files are present it may be set with the --from-date parameter. If Danplanner included the time interval in the file or in the filename, then all this could have been done a bit simpler. Be aware that the destination folder must have a subfolder named after the present year, e.g. 2024.
+
+Example in its simples form:
 
 `./danplannerExport2billy.py -f ~/Downloads/FinanceExport_4_11_2024.csv`
+
+A simple wrapper script is included for use on GNU/Linux, called dp2billy.sh. Example usage:
+
+`./dp2billy.sh -f ~/Downloads/FinanceExport_4_11_2024.csv`

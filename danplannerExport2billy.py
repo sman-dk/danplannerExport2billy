@@ -343,8 +343,8 @@ def billy_stuff(cfg, from_date_str, to_date_str, to_date, dp_data):
         }
         transaction_lines.append(transaction_line)
         print(f'   {account_no}: {amount} {side} (VAT: {taxrate_name}) ({account_name})')
-    user_ok = input('\nWould you like to proceed and upload data to Billy? (y/n): ')
-    if not user_ok == 'y':
+    user_ok = input('\nWould you like to proceed and upload data to Billy? [Y/n]: ')
+    if user_ok.lower() not in ['y', '']:
         print('*** Data is NOT uploaded to Billy ***')
         return
     response = post_daybook_transactions(client, daybook_id, entry_date, organization_id, from_date_str, to_date_str,

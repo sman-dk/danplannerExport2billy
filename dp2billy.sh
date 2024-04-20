@@ -6,5 +6,5 @@
 #
 
 source ~/github/danplannerExport2billy/venv/bin/activate
-python3 ~/github/danplannerExport2billy/danplannerExport2billy.py $@
+python3 ~/github/danplannerExport2billy/danplannerExport2billy.py -f $@
 deactivate

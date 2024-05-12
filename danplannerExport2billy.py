@@ -188,6 +188,11 @@ def parse_danplanner_file(args, cfg, path=None):
     else:
         full_path = path
     print(f'Checking the file {full_path}')
+    locale = cfg['files']['currencyLocale']
+    sales_vat_rate = parse_decimal(cfg['billy']['salesvatrate'], locale=locale)
+    sales_account_numbers = [int(i.strip()) for i in cfg['billy']['salesaccounts'].split(',')]
+    vat_account_ignore_numbers = [int(i.strip()) for i in cfg['billy']['vataccountsignore'].split(',')]
+    vat_rate_check_ok = True
     with open(full_path, 'r', newline='') as f:
         csvreader = csv.reader(f, delimiter=';', quotechar='"')
         first_line = True
@@ -203,17 +208,35 @@ def parse_danplanner_file(args, cfg, path=None):
                 else:
                     continue
             else:
-                locale = cfg['files']['currencyLocale']
                 amount_ex_vat = parse_decimal(row[2], locale=locale)
                 amount_vat = parse_decimal(row[3], locale=locale)
+                account_no = int(row[0])
+                if account_no in vat_account_ignore_numbers:
+                    continue
+
+                # VAT check
+                if account_no in sales_account_numbers:
+                    if not amount_ex_vat * sales_vat_rate == amount_vat:
+                        print('ERROR amount_ex_vat * sales_vat_rate is not equal amount_vat:', file=sys.stderr)
+                        print(f'Account number {account_no}: {amount_ex_vat} * {sales_vat_rate} '
+                              f'is not equal {amount_vat}', file=sys.stderr)
+                        vat_rate_check_ok = False
+                else:
+                    if amount_vat != 0:
+                        print(f'ERROR amount_vat is not 0 for account {account_no}', file=sys.stderr)
+                        vat_rate_check_ok = False
+
                 row_dict = {
-                    'account_no': int(row[0]),
+                    'account_no': account_no,
                     'account_name': row[1],
                     'amount_ex_vat': amount_ex_vat,
                     'amount_vat': amount_vat,
                     'amount_incl_vat': amount_ex_vat + amount_vat
                 }
                 dp_data.append(row_dict)
+    if not vat_rate_check_ok:
+        print('\n*** VAT rate check failed! ***\nExiting!', file=sys.stderr)
+        sys.exit(1)
     balance_check(dp_data)
     print('Danplanner file ok!')
     return dp_data
@@ -250,8 +273,16 @@ def move_file(args, cfg):
             sys.exit(1)
         from_date_str = args.from_date
     else:
-        last_file = files[-1]
-        from_date_str = last_file.split('_-_')[-1].split('.csv')[0]
+        # Locate the file with the newest date to determine the from_date
+        from_date = datetime.fromisoformat('1970-01-01')
+        from_date_str = ""
+        for f in files:
+            this_from_date_str = f.split('_-_')[-1].split('.csv')[0]
+            this_from_date = datetime.fromisoformat(this_from_date_str)
+            if this_from_date > from_date:
+                from_date = this_from_date
+                from_date_str = this_from_date_str
+
     # Sanity check of from date
     print(f'Sanity checking from date ({from_date_str})')
     check_date(from_date_str)

@@ -4,6 +4,13 @@ apikey=abcdef1234567890
 ; Prefix string to insert into the description in Billy transaction lines
 prefix=dp2billy
 
+
+; Used for VAT check. Be aware that salesVatRate follows the currencyLocale from the files section. I.e. 25% VAT rate with da_DK locale is "0,25"
+salesVatRate=0,25
+salesAccounts=1111,1112,1113
+; ignore the sales vat account from Danplanner, as it is already included in the sales lines
+vatAccountsIgnore=7250
+
 [files]
 # OBS Be aware that the current year is appended to the path. E.g. /2024
 # If the folder is not present, then the script will fail

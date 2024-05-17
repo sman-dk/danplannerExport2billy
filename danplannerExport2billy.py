@@ -154,6 +154,8 @@ def arguments():
     parser.add_argument('-t', '--to-date', help='If the to date is not today. A timestamp may be included. '
                                                 'ISO8601 format: E.g. 2024-04-09 or 2024-04-09T14:56:12',
                         default=None, type=check_date)
+    parser.add_argument('-d', '--disable-vat-check', help='If set VAT sum check is disabled',
+                        default = False, action='store_true')
     args = parser.parse_args()
     return args
 
@@ -215,16 +217,19 @@ def parse_danplanner_file(args, cfg, path=None):
                     continue
 
                 # VAT check
-                if account_no in sales_account_numbers:
-                    if not amount_ex_vat * sales_vat_rate == amount_vat:
-                        print('ERROR amount_ex_vat * sales_vat_rate is not equal amount_vat:', file=sys.stderr)
-                        print(f'Account number {account_no}: {amount_ex_vat} * {sales_vat_rate} '
-                              f'is not equal {amount_vat}', file=sys.stderr)
-                        vat_rate_check_ok = False
+                if args.disable_vat_check:
+                    print('VAT check disabled')
                 else:
-                    if amount_vat != 0:
-                        print(f'ERROR amount_vat is not 0 for account {account_no}', file=sys.stderr)
-                        vat_rate_check_ok = False
+                    if account_no in sales_account_numbers:
+                        if not amount_ex_vat * sales_vat_rate == amount_vat:
+                            print('ERROR amount_ex_vat * sales_vat_rate is not equal amount_vat:', file=sys.stderr)
+                            print(f'Account number {account_no}: {amount_ex_vat} * {sales_vat_rate} '
+                                  f'is not equal {amount_vat}', file=sys.stderr)
+                            vat_rate_check_ok = False
+                    else:
+                        if amount_vat != 0:
+                            print(f'ERROR amount_vat is not 0 for account {account_no}', file=sys.stderr)
+                            vat_rate_check_ok = False
 
                 row_dict = {
                     'account_no': account_no,
